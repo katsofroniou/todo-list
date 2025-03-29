@@ -25,7 +25,7 @@ function TodoList() {
       return;
     }
 
-    setTasks([...tasks, { text: task, completed: false }]);
+    setTasks([...tasks, { text: task, completed: false, priority: 'low' }]);
     setInputValue('');
   };
 
@@ -85,6 +85,18 @@ function TodoList() {
               />
               <span>{task.text}</span>
             </label>
+            <select
+              value={task.priority}
+              onChange={(e) => {
+                const newTasks = [...tasks];
+                newTasks[index].priority = e.target.value;
+                setTasks(newTasks);
+              }}
+            >
+              <option value="low">Low</option>
+              <option value="medium">Medium</option>
+              <option value="high">High</option>
+            </select>
             <span className="edit-btn" onClick={() => editTask(index)}>Edit</span>
             <span className="delete-btn" onClick={() => deleteTask(index)}>Delete</span>
           </li>
