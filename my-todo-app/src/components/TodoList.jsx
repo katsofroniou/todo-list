@@ -7,6 +7,7 @@ function TodoList() {
     return savedTasks ? JSON.parse(savedTasks) : [];
   });
   const [inputValue, setInputValue] = useState('');
+  const [filter, setFilter] = useState('all');
 
   useEffect(() => {
     localStorage.setItem('tasks', JSON.stringify(tasks));
@@ -53,6 +54,12 @@ function TodoList() {
     }
   };
 
+  const filteredTasks = tasks.filter(task => {
+    if (filter === 'completed') return task.completed;
+    if (filter === 'uncompleted') return !task.completed;
+    return true;
+  });
+
   const { completedTasks, uncompletedTasks } = updateCounters();
 
   return (
@@ -74,8 +81,13 @@ function TodoList() {
       </div>
 
       <h2>Task List</h2>
+      <div className="filter-buttons">
+        <button onClick={() => setFilter('all')}>All</button>
+        <button onClick={() => setFilter('completed')}>Completed</button>
+        <button onClick={() => setFilter('uncompleted')}>Uncompleted</button>
+      </div>
       <ul id="list-container">
-        {tasks.map((task, index) => (
+        {filteredTasks.map((task, index) => (
           <li key={index} className={task.completed ? 'completed' : ''}>
             <label>
               <input
