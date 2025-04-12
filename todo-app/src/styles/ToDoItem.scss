@@ -1,73 +1,115 @@
+@use 'variables' as *;
+@use 'mixins' as *;
+@use 'sass:color';
+
 .todo-item {
-  padding: 10px;
-  border-bottom: 1px solid #ff69b4;
-  color: #ff1493;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  transition: background-color 0.3s;
+  padding: $spacing-md;
+  margin-bottom: $spacing-sm;
+  border-bottom: 1px solid $primary-color;
+  color: $primary-dark;
+  @include flex-between;
   flex-wrap: wrap;
-}
-
-.todo-item:hover {
-  background-color: #ffe6f2;
-}
-
-.todo-item.completed {
-  text-decoration: line-through;
-  color: #ff69b4;
-}
-
-input[type="text"] {
-  border: 1px solid #ff69b4;
-  border-radius: 4px;
-  padding: 5px;
-  width: 60%;
-}
-
-input[type="date"] {
-  border: 1px solid #ff69b4;
-  border-radius: 4px;
-  padding: 5px;
-}
-
-.todo-selects {
-  display: flex;
-  gap: 10px;
+  transition: $transition-normal;
+  background-color: white;
+  border-radius: $border-radius-sm;
   
-  @media (max-width: 768px) {
-    flex-direction: column;
-    width: 100%;
-    margin-top: 5px;
+  &:hover {
+    background-color: $primary-light;
   }
-}
-
-.select-group {
-  display: flex;
-  align-items: center;
-  gap: 5px;
   
-  label {
-    font-size: 0.8rem;
+  &.completed {
+    color: $completed-color;
+    background-color: rgba($primary-light, 0.7);
+    border-left: 3px solid $completed-color;
   }
-}
-
-select {
-  border: 1px solid #ff69b4;
-  border-radius: 4px;
-  padding: 5px;
-}
-
-button {
-  background-color: #ff69b4;
-  color: white;
-  border: none;
-  padding: 5px 10px;
-  border-radius: 5px;
-  cursor: pointer;
-  transition: background-color 0.3s;
-}
-
-button:hover {
-  background-color: #ff1493;
+  
+  input[type="text"] {
+    @include input-base;
+    width: 60%;
+    max-width: 300px;
+  }
+  
+  input[type="date"] {
+    @include input-base;
+  }
+  
+  .todo-selects {
+    display: flex;
+    gap: $spacing-sm;
+    margin: $spacing-sm 0;
+    flex-wrap: wrap;
+    
+    @include respond-to(md) {
+      flex-direction: column;
+      width: 100%;
+    }
+    
+    .select-group {
+      display: flex;
+      align-items: center;
+      gap: $spacing-xs;
+      
+      label {
+        font-size: 0.9rem;
+        color: $primary-dark;
+      }
+      
+      select {
+        @include input-base;
+      }
+    }
+  }
+  
+  button {
+    @include button-primary;
+  }
+  
+  // Simplified view for matrix
+  &.simplified {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: $spacing-sm;
+    margin-bottom: $spacing-xs;
+    border-bottom: 1px solid rgba($primary-color, 0.3);
+    
+    .todo-text {
+      font-weight: 500;
+      flex: 1;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      margin-right: $spacing-sm;
+    }
+    
+    .todo-actions {
+      display: flex;
+      align-items: center;
+      gap: $spacing-xs;
+      flex-shrink: 0;
+      
+      .todo-date {
+        font-size: 0.8rem;
+        color: $primary-dark;
+        background: rgba($primary-color, 0.1);
+        padding: 2px 6px;
+        border-radius: $border-radius-pill;
+      }
+      
+      .complete-btn {
+        padding: 2px 8px;
+        font-size: 0.8rem;
+        min-width: auto;
+      }
+    }
+    
+    &:hover {
+      background-color: rgba($primary-light, 0.5);
+    }
+    
+    &.completed {
+      opacity: 0.8;
+      border-left: 3px solid $completed-color;
+    }
+  }
 }

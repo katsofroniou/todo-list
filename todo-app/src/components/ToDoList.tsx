@@ -6,36 +6,45 @@ import { Todo } from '../types';
 
 // todo list component 
 const ToDoList: React.FC = () => {
-  const [todos, setTodos] = useState<Todo[]>([]);
+  const [todos, setTodos] = useState<Todo[]>(() => {
+    // Default todo 
+    return [{
+      id: Date.now(),
+      text: 'Click me to edit this task',
+      completed: false,
+      priority: 'important',
+      urgency: 'high',
+      dueDate: new Date(Date.now() + 86400000) // Tomorrow
+    }];
+  });
   const [showCompleted, setShowCompleted] = useState(false);
   const [priorityFilter, setPriorityFilter] = useState<'all' | 'important' | 'not-important'>('all');
   const [viewMode, setViewMode] = useState<'list' | 'matrix'>('list');
 
   useEffect(() => {
     window.ipcRenderer.invoke('todos:get').then((storedTodos) => {
-      const parsedTodos = storedTodos.map((todo: Todo) => ({
-        ...todo,
-        dueDate: todo.dueDate ? new Date(todo.dueDate) : undefined
-      }));
-      setTodos(parsedTodos);
+      if (storedTodos && storedTodos.length > 0) {
+        const parsedTodos = storedTodos.map((todo: Todo) => ({
+          ...todo,
+          dueDate: todo.dueDate ? new Date(todo.dueDate) : undefined
+        }));
+        setTodos(parsedTodos);
+      }
+      // If no stored todos, keep the default
     });
   }, []);
 
-  // save on change
   useEffect(() => {
     const todosToStore = todos.map(todo => ({
       ...todo,
       dueDate: todo.dueDate ? todo.dueDate.toISOString() : undefined
     }));
     
-    // Save to store
     window.ipcRenderer.invoke('todos:set', todosToStore);
     
-    // Also update the latest todos in the main process for saving on close
     window.ipcRenderer.invoke('todos:update-latest', todosToStore);
   }, [todos]);
 
-  // Add event listener for beforeunload to ensure saving before page unload
   useEffect(() => {
     const handleBeforeUnload = () => {
       const todosToStore = todos.map(todo => ({
@@ -69,20 +78,14 @@ const ToDoList: React.FC = () => {
 
   const sortedTodos = todos
     .filter(todo => {
-      // Filter by completion status
       const completionMatch = todo.completed === showCompleted;
-      
-      // Filter by priority
       const priorityMatch = priorityFilter === 'all' || todo.priority === priorityFilter;
-      
       return completionMatch && priorityMatch;
     })
     .sort((a, b) => {
-      // Sort by importance first (important comes before not-important)
       if (a.priority === 'important' && b.priority !== 'important') return -1;
       if (a.priority !== 'important' && b.priority === 'important') return 1;
       
-      // Then sort by urgency
       const urgencyOrder = { high: 3, medium: 2, low: 1 };
       return (urgencyOrder[b.urgency || 'low'] || 1) - (urgencyOrder[a.urgency || 'low'] || 1);
     });
@@ -132,13 +135,15 @@ const ToDoList: React.FC = () => {
             </div>
           </div>
           
-          {sortedTodos.length > 0 ? (
-            sortedTodos.map(todo => (
-              <ToDoItem key={todo.id} todo={todo} onUpdate={updateTodo} />
-            ))
-          ) : (
-            <div className="no-todos">No matching todos found</div>
-          )}
+          <div className="todo-content">
+            {sortedTodos.length > 0 ? (
+              sortedTodos.map(todo => (
+                <ToDoItem key={todo.id} todo={todo} onUpdate={updateTodo} />
+              ))
+            ) : (
+              <div className="no-todos">No matching todos found</div>
+            )}
+          </div>
         </>
       ) : (
         <EisenhowerMatrix todos={todos} onUpdate={updateTodo} />
