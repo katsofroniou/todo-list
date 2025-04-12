@@ -1,5 +1,6 @@
 @use 'variables' as *;
 @use 'mixins' as *;
+@use 'sass:color';
 
 .eisenhower-matrix {
   @include flex-column;
@@ -46,7 +47,6 @@
       text-align: center;
     }
     
-    // Define matrix quadrant colors
     $quadrant-colors: (
       'important-urgent': #ffebee,
       'important-not-urgent': #e8f5e9,
@@ -54,11 +54,10 @@
       'not-important-not-urgent': #f3e5f5
     );
     
-    // Apply colors to each quadrant
     @each $name, $color in $quadrant-colors {
       &.#{$name} {
         background-color: $color;
-        border-left: 4px solid darken($color, 30%);
+        border-left: 4px solid color.adjust($color, $lightness: -30%);
       }
     }
   }
@@ -85,7 +84,7 @@
   }
   
   .no-todos {
-    color: lighten($text-color, 40%);
+    color: color.adjust($text-color, $lightness: -40%);
     font-style: italic;
     text-align: center;
     padding: $spacing-lg 0;

@@ -1,5 +1,6 @@
 @use 'variables' as *;
 @use 'mixins' as *;
+@use 'sass:color';
 
 .todo-list {
   width: 100%;
@@ -68,7 +69,7 @@
   .no-todos {
     text-align: center;
     padding: $spacing-lg;
-    color: lighten($text-color, 40%);
+    color: color.adjust($text-color, $lightness: -40%);
     font-style: italic;
   }
 }
