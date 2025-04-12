@@ -3,17 +3,22 @@ import { createRequire } from 'node:module'
 import { fileURLToPath } from 'node:url'
 import path from 'node:path'
 import fs from 'node:fs'
+import debounce from 'lodash/debounce'
 
 const storePath = path.join(app.getPath('userData'), 'todos.json')
 const store = {
   get() {
     try {
-      return JSON.parse(fs.readFileSync(storePath, 'utf8'))
+      const todos = JSON.parse(fs.readFileSync(storePath, 'utf8'))
+      console.log('Loaded todos:', todos)
+      return todos
     } catch (error) {
+      console.log('Error loading todos:', error)
       return []
     }
   },
   set(todos: any[]) {
+    console.log('Saving todos:', todos)
     fs.writeFileSync(storePath, JSON.stringify(todos))
   }
 }
@@ -59,6 +64,11 @@ function createWindow() {
     },
   })
 
+  // Load initial todos from store
+  const initialTodos = store.get()
+  latestTodos = initialTodos
+  console.log('Initial todos loaded:', initialTodos)
+
   // Add CSP headers with development-friendly settings
   win.webContents.session.webRequest.onHeadersReceived((details, callback) => {
     callback({
@@ -102,9 +112,7 @@ function createWindow() {
 
   // Save todos when window is about to close
   win.on('close', () => {
-    if (latestTodos.length > 0) {
-      store.set(latestTodos)
-    }
+    debouncedStoreSave.flush();
   })
 
   // Load the app
@@ -113,6 +121,12 @@ function createWindow() {
   } else {
     win.loadFile(path.join(process.env.APP_ROOT, 'dist', 'index.html'))
   }
+
+  // Send initial todos to renderer once window is ready
+  win.webContents.on('did-finish-load', () => {
+    console.log('Window finished loading, sending initial todos:', initialTodos)
+    win?.webContents.send('todos-updated', initialTodos)
+  })
 }
 
 app.on('window-all-closed', () => {
@@ -128,9 +142,15 @@ app.on('activate', () => {
   }
 })
 
+const debouncedStoreSave = debounce((todos) => {
+  if (todos.length > 0) {
+    store.set(todos);
+  }
+}, 1000);
+
 ipcMain.handle('todos:set', (_, todos) => {
-  store.set(todos)
-  return true
+  debouncedStoreSave(todos);
+  return true;
 })
 
 ipcMain.handle('todos:get', () => {
@@ -143,9 +163,7 @@ ipcMain.handle('todos:update-latest', (_, todos) => {
 })
 
 app.on('before-quit', () => {
-  if (latestTodos.length > 0) {
-    store.set(latestTodos)
-  }
+  debouncedStoreSave.flush();
 })
 
 ipcMain.on('update-todos', (_event, todos) => {

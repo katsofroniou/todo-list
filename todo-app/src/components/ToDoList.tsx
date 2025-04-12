@@ -3,61 +3,76 @@ import ToDoItem from './ToDoItem';
 import EisenhowerMatrix from './Matrix';
 import '../styles/ToDoList.scss';
 import { Todo } from '../types';
+import { debounce } from 'lodash';
 
 // todo list component 
 const ToDoList: React.FC = () => {
-  const [todos, setTodos] = useState<Todo[]>(() => {
-    // Default todo 
-    return [{
-      id: Date.now(),
-      text: 'Click me to edit this task',
-      completed: false,
-      priority: 'important',
-      urgency: 'high',
-      dueDate: new Date(Date.now() + 86400000) // Tomorrow
-    }];
-  });
+  const [todos, setTodos] = useState<Todo[]>([{
+    id: Date.now(),
+    text: 'Click me to edit this task',
+    completed: false,
+    priority: 'important',
+    urgency: 'high',
+    dueDate: new Date(Date.now() + 86400000) // Tomorrow
+  }]);
   const [showCompleted, setShowCompleted] = useState(false);
   const [priorityFilter, setPriorityFilter] = useState<'all' | 'important' | 'not-important'>('all');
   const [viewMode, setViewMode] = useState<'list' | 'matrix'>('list');
 
   useEffect(() => {
-    window.ipcRenderer.invoke('todos:get').then((storedTodos) => {
-      if (storedTodos && storedTodos.length > 0) {
-        const parsedTodos = storedTodos.map((todo: Todo) => ({
+    // Load initial todos when component mounts
+    const loadInitialTodos = async () => {
+      try {
+        const initialTodos = await window.ipcRenderer.invoke('todos:get');
+        console.log('Received initial todos:', initialTodos);
+        if (Array.isArray(initialTodos) && initialTodos.length > 0) {
+          // Convert ISO date strings back to Date objects
+          const processedTodos = initialTodos.map(todo => ({
+            ...todo,
+            dueDate: todo.dueDate ? new Date(todo.dueDate) : undefined
+          }));
+          setTodos(processedTodos);
+        }
+      } catch (error) {
+        console.error('Error loading initial todos:', error);
+      }
+    };
+
+    loadInitialTodos();
+
+    // Listen for todos-updated events
+    const handleTodosUpdated = (_event: any, updatedTodos: any[]) => {
+      console.log('Received todos-updated event:', updatedTodos);
+      if (Array.isArray(updatedTodos)) {
+        const processedTodos = updatedTodos.map(todo => ({
           ...todo,
           dueDate: todo.dueDate ? new Date(todo.dueDate) : undefined
         }));
-        setTodos(parsedTodos);
+        setTodos(processedTodos);
       }
-      // If no stored todos, keep the default
-    });
+    };
+
+    window.ipcRenderer.on('todos-updated', handleTodosUpdated);
+
+    return () => {
+      window.ipcRenderer.removeAllListeners('todos-updated');
+    };
   }, []);
 
   useEffect(() => {
-    const todosToStore = todos.map(todo => ({
-      ...todo,
-      dueDate: todo.dueDate ? todo.dueDate.toISOString() : undefined
-    }));
-    
-    window.ipcRenderer.invoke('todos:set', todosToStore);
-    
-    window.ipcRenderer.invoke('todos:update-latest', todosToStore);
-  }, [todos]);
-
-  useEffect(() => {
-    const handleBeforeUnload = () => {
-      const todosToStore = todos.map(todo => ({
+    const debouncedSave = debounce((todosToSave: Todo[]) => {
+      const processedTodos = todosToSave.map((todo: Todo) => ({
         ...todo,
         dueDate: todo.dueDate ? todo.dueDate.toISOString() : undefined
       }));
-      window.ipcRenderer.invoke('todos:set', todosToStore);
-    };
+      window.ipcRenderer.invoke('todos:set', processedTodos);
+      window.ipcRenderer.invoke('todos:update-latest', processedTodos);
+    }, 1000);
 
-    window.addEventListener('beforeunload', handleBeforeUnload);
+    debouncedSave(todos);
 
     return () => {
-      window.removeEventListener('beforeunload', handleBeforeUnload);
+      debouncedSave.cancel();
     };
   }, [todos]);
 
