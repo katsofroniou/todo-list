@@ -1,4 +1,4 @@
-@import 'variables';
+@use 'variables' as *;
 
 // Flexbox mixins
 @mixin flex-center {

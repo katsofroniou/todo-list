@@ -1,5 +1,5 @@
-@import 'variables';
-@import 'mixins';
+@use 'variables' as *;
+@use 'mixins' as *;
 
 body {
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -7,7 +7,9 @@ body {
   margin: 0;
   padding: 0;
   min-height: 100vh;
-  @include flex-center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .App {
