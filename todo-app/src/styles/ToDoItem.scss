@@ -1,73 +1,60 @@
+@import 'variables';
+@import 'mixins';
+
 .todo-item {
-  padding: 10px;
-  border-bottom: 1px solid #ff69b4;
-  color: #ff1493;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  transition: background-color 0.3s;
+  padding: $spacing-md;
+  margin-bottom: $spacing-sm;
+  border-bottom: 1px solid $primary-color;
+  color: $primary-dark;
+  @include flex-between;
   flex-wrap: wrap;
-}
-
-.todo-item:hover {
-  background-color: #ffe6f2;
-}
-
-.todo-item.completed {
-  text-decoration: line-through;
-  color: #ff69b4;
-}
-
-input[type="text"] {
-  border: 1px solid #ff69b4;
-  border-radius: 4px;
-  padding: 5px;
-  width: 60%;
-}
-
-input[type="date"] {
-  border: 1px solid #ff69b4;
-  border-radius: 4px;
-  padding: 5px;
-}
-
-.todo-selects {
-  display: flex;
-  gap: 10px;
+  transition: $transition-normal;
   
-  @media (max-width: 768px) {
-    flex-direction: column;
-    width: 100%;
-    margin-top: 5px;
+  &:hover {
+    background-color: $primary-light;
   }
-}
-
-.select-group {
-  display: flex;
-  align-items: center;
-  gap: 5px;
   
-  label {
-    font-size: 0.8rem;
+  &.completed {
+    text-decoration: line-through;
+    color: $completed-color;
   }
-}
-
-select {
-  border: 1px solid #ff69b4;
-  border-radius: 4px;
-  padding: 5px;
-}
-
-button {
-  background-color: #ff69b4;
-  color: white;
-  border: none;
-  padding: 5px 10px;
-  border-radius: 5px;
-  cursor: pointer;
-  transition: background-color 0.3s;
-}
-
-button:hover {
-  background-color: #ff1493;
+  
+  input[type="text"] {
+    @include input-base;
+    width: 60%;
+  }
+  
+  input[type="date"] {
+    @include input-base;
+  }
+  
+  .todo-selects {
+    display: flex;
+    gap: $spacing-sm;
+    margin: $spacing-sm 0;
+    
+    @include respond-to(md) {
+      flex-direction: column;
+      width: 100%;
+    }
+    
+    .select-group {
+      display: flex;
+      align-items: center;
+      gap: $spacing-xs;
+      
+      label {
+        font-size: 0.9rem;
+        color: $primary-dark;
+      }
+      
+      select {
+        @include input-base;
+      }
+    }
+  }
+  
+  button {
+    @include button-primary;
+  }
 }

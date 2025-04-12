@@ -1,0 +1,38 @@
+// Import base styles
+@import 'variables';
+@import 'mixins';
+
+// Import component styles
+@import 'App';
+@import 'ToDoList';
+@import 'ToDoItem';
+@import 'Matrix';
+
+// Global styles
+* {
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  color: $text-color;
+  line-height: 1.6;
+}
+
+// Reset some browser defaults
+button, input, select {
+  font-family: inherit;
+}
+
+// Utility classes
+.text-center {
+  text-align: center;
+}
+
+.mt-1 { margin-top: $spacing-sm; }
+.mt-2 { margin-top: $spacing-md; }
+.mt-3 { margin-top: $spacing-lg; }
+
+.mb-1 { margin-bottom: $spacing-sm; }
+.mb-2 { margin-bottom: $spacing-md; }
+.mb-3 { margin-bottom: $spacing-lg; }

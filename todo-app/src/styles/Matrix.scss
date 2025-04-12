@@ -1,63 +1,95 @@
+@import 'variables';
+@import 'mixins';
+
 .eisenhower-matrix {
+  @include flex-column;
+  width: 100%;
+  margin-top: $spacing-lg;
+  
+  .matrix-row {
     display: flex;
-    flex-direction: column;
-    width: 100%;
-    margin-top: 20px;
+    height: 250px;
+    margin-bottom: $spacing-sm;
     
-    .matrix-row {
-      display: flex;
-      flex-direction: row;
-      height: 300px;
-      
-      @media (max-width: 768px) {
-        flex-direction: column;
-        height: auto;
-      }
-    }
-    
-    .matrix-cell {
-      flex: 1;
-      padding: 15px;
-      border: 1px solid #ff69b4;
-      overflow-y: auto;
-      
-      h3 {
-        margin-top: 0;
-        color: #ff1493;
-      }
-      
-      p {
-        font-style: italic;
-        margin-bottom: 10px;
-        color: #ff69b4;
-      }
-    }
-    
-    .important-urgent {
-      background-color: #ffebee;
-    }
-    
-    .important-not-urgent {
-      background-color: #e8f5e9;
-    }
-    
-    .not-important-urgent {
-      background-color: #fff8e1;
-    }
-    
-    .not-important-not-urgent {
-      background-color: #f3e5f5;
-    }
-    
-    .matrix-todos {
-      max-height: 200px;
-      overflow-y: auto;
-    }
-    
-    .no-todos {
-      color: #999;
-      font-style: italic;
-      text-align: center;
-      padding: 20px 0;
+    @include respond-to(md) {
+      flex-direction: column;
+      height: auto;
     }
   }
+  
+  .matrix-cell {
+    flex: 1;
+    padding: $spacing-md;
+    border-radius: $border-radius-md;
+    margin: 0 $spacing-xs;
+    overflow-y: auto;
+    box-shadow: $shadow-sm;
+    transition: $transition-normal;
+    
+    &:hover {
+      transform: translateY(-3px);
+      box-shadow: $shadow-md;
+    }
+    
+    h3 {
+      margin-top: 0;
+      color: $primary-dark;
+      text-align: center;
+      border-bottom: 2px dashed rgba($primary-color, 0.3);
+      padding-bottom: $spacing-sm;
+    }
+    
+    p {
+      font-style: italic;
+      margin-bottom: $spacing-sm;
+      color: $primary-color;
+      text-align: center;
+    }
+    
+    // Define matrix quadrant colors
+    $quadrant-colors: (
+      'important-urgent': #ffebee,
+      'important-not-urgent': #e8f5e9,
+      'not-important-urgent': #fff8e1,
+      'not-important-not-urgent': #f3e5f5
+    );
+    
+    // Apply colors to each quadrant
+    @each $name, $color in $quadrant-colors {
+      &.#{$name} {
+        background-color: $color;
+        border-left: 4px solid darken($color, 30%);
+      }
+    }
+  }
+  
+  .matrix-todos {
+    max-height: 170px;
+    overflow-y: auto;
+    padding-right: $spacing-xs;
+    
+    // Custom scrollbar
+    &::-webkit-scrollbar {
+      width: 6px;
+    }
+    
+    &::-webkit-scrollbar-track {
+      background: rgba($primary-color, 0.1);
+      border-radius: $border-radius-pill;
+    }
+    
+    &::-webkit-scrollbar-thumb {
+      background: rgba($primary-color, 0.5);
+      border-radius: $border-radius-pill;
+    }
+  }
+  
+  .no-todos {
+    color: lighten($text-color, 40%);
+    font-style: italic;
+    text-align: center;
+    padding: $spacing-lg 0;
+    background-color: rgba(white, 0.5);
+    border-radius: $border-radius-sm;
+  }
+}

@@ -1,6 +1,19 @@
+@import 'variables';
+@import 'mixins';
+
 body {
-  font-family: Arial, sans-serif;
-  background-color: #ffe6f2;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background-color: $primary-light;
   margin: 0;
   padding: 0;
+  min-height: 100vh;
+  @include flex-center;
+}
+
+.App {
+  width: 100%;
+  max-width: 800px;
+  min-height: 600px;
+  @include flex-center;
+  padding: $spacing-md;
 }
