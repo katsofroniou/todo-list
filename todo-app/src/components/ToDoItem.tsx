@@ -18,7 +18,11 @@ const ToDoItem: React.FC<TodoItemProps> = ({ todo, onUpdate }) => {
   };
 
   const handlePriorityChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    onUpdate({ ...todo, priority: e.target.value as 'low' | 'medium' | 'high' });
+    onUpdate({ ...todo, priority: e.target.value as 'important' | 'not-important' });
+  };
+
+  const handleUrgencyChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    onUpdate({ ...todo, urgency: e.target.value as 'low' | 'medium' | 'high' });
   };
 
   const toggleCompleted = () => {
@@ -41,11 +45,23 @@ const ToDoItem: React.FC<TodoItemProps> = ({ todo, onUpdate }) => {
         value={formatDateForInput(todo.dueDate)} 
         onChange={handleDueDateChange} 
       />
-      <select value={todo.priority} onChange={handlePriorityChange}>
-        <option value="low">Low</option>
-        <option value="medium">Medium</option>
-        <option value="high">High</option>
-      </select>
+      <div className="todo-selects">
+        <div className="select-group">
+          <label>Priority:</label>
+          <select value={todo.priority || 'not-important'} onChange={handlePriorityChange}>
+            <option value="important">Important</option>
+            <option value="not-important">Not Important</option>
+          </select>
+        </div>
+        <div className="select-group">
+          <label>Urgency:</label>
+          <select value={todo.urgency || 'low'} onChange={handleUrgencyChange}>
+            <option value="low">Low</option>
+            <option value="medium">Medium</option>
+            <option value="high">High</option>
+          </select>
+        </div>
+      </div>
       <button onClick={toggleCompleted}>
         {todo.completed ? 'Undo' : 'Complete'}
       </button>

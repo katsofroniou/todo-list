@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import ToDoItem from './ToDoItem';
+import EisenhowerMatrix from './Matrix';
 import '../styles/ToDoList.scss';
 import { Todo } from '../types';
 
@@ -7,6 +8,8 @@ import { Todo } from '../types';
 const ToDoList: React.FC = () => {
   const [todos, setTodos] = useState<Todo[]>([]);
   const [showCompleted, setShowCompleted] = useState(false);
+  const [priorityFilter, setPriorityFilter] = useState<'all' | 'important' | 'not-important'>('all');
+  const [viewMode, setViewMode] = useState<'list' | 'matrix'>('list');
 
   useEffect(() => {
     window.ipcRenderer.invoke('todos:get').then((storedTodos) => {
@@ -50,7 +53,13 @@ const ToDoList: React.FC = () => {
   }, [todos]);
 
   const addTodo = (text: string) => {
-    const newTodo: Todo = { id: Date.now(), text, completed: false, priority: 'low' };
+    const newTodo: Todo = { 
+      id: Date.now(), 
+      text, 
+      completed: false, 
+      priority: 'not-important',
+      urgency: 'low'
+    };
     setTodos([...todos, newTodo]);
   };
 
@@ -59,27 +68,81 @@ const ToDoList: React.FC = () => {
   };
 
   const sortedTodos = todos
-    .filter(todo => todo.completed === showCompleted)
+    .filter(todo => {
+      // Filter by completion status
+      const completionMatch = todo.completed === showCompleted;
+      
+      // Filter by priority
+      const priorityMatch = priorityFilter === 'all' || todo.priority === priorityFilter;
+      
+      return completionMatch && priorityMatch;
+    })
     .sort((a, b) => {
-      const priorityOrder = { low: 1, medium: 2, high: 3 };
-      return (priorityOrder[b.priority || 'low'] || 1) - (priorityOrder[a.priority || 'low'] || 1);
+      // Sort by importance first (important comes before not-important)
+      if (a.priority === 'important' && b.priority !== 'important') return -1;
+      if (a.priority !== 'important' && b.priority === 'important') return 1;
+      
+      // Then sort by urgency
+      const urgencyOrder = { high: 3, medium: 2, low: 1 };
+      return (urgencyOrder[b.urgency || 'low'] || 1) - (urgencyOrder[a.urgency || 'low'] || 1);
     });
 
   return (
-    <div className="todo-list">
+    <div className="todo-list" role="main">
       <h1>Todo List</h1>
-      <button onClick={() => addTodo('New Task')}>Add Todo</button>
-      <div className="tabs">
-        <button onClick={() => setShowCompleted(false)} className={!showCompleted ? 'active' : ''}>
-          Not Completed
+      <button type="button" onClick={() => addTodo('New Task')}>Add Todo</button>
+      
+      <div className="view-tabs">
+        <button 
+          onClick={() => setViewMode('list')} 
+          className={viewMode === 'list' ? 'active' : ''}
+        >
+          List View
         </button>
-        <button onClick={() => setShowCompleted(true)} className={showCompleted ? 'active' : ''}>
-          Completed
+        <button 
+          onClick={() => setViewMode('matrix')} 
+          className={viewMode === 'matrix' ? 'active' : ''}
+        >
+          Eisenhower Matrix
         </button>
       </div>
-      {sortedTodos.map(todo => (
-        <ToDoItem key={todo.id} todo={todo} onUpdate={updateTodo} />
-      ))}
+      
+      {viewMode === 'list' ? (
+        <>
+          <div className="filters">
+            <div className="tabs">
+              <button onClick={() => setShowCompleted(false)} className={!showCompleted ? 'active' : ''}>
+                Not Completed
+              </button>
+              <button onClick={() => setShowCompleted(true)} className={showCompleted ? 'active' : ''}>
+                Completed
+              </button>
+            </div>
+            
+            <div className="priority-filter">
+              <label>Priority Filter:</label>
+              <select 
+                value={priorityFilter} 
+                onChange={(e) => setPriorityFilter(e.target.value as 'all' | 'important' | 'not-important')}
+              >
+                <option value="all">All Priorities</option>
+                <option value="important">Important</option>
+                <option value="not-important">Not Important</option>
+              </select>
+            </div>
+          </div>
+          
+          {sortedTodos.length > 0 ? (
+            sortedTodos.map(todo => (
+              <ToDoItem key={todo.id} todo={todo} onUpdate={updateTodo} />
+            ))
+          ) : (
+            <div className="no-todos">No matching todos found</div>
+          )}
+        </>
+      ) : (
+        <EisenhowerMatrix todos={todos} onUpdate={updateTodo} />
+      )}
     </div>
   );
 };

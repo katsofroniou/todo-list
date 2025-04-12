@@ -6,6 +6,7 @@
   align-items: center;
   justify-content: space-between;
   transition: background-color 0.3s;
+  flex-wrap: wrap;
 }
 
 .todo-item:hover {
@@ -28,6 +29,27 @@ input[type="date"] {
   border: 1px solid #ff69b4;
   border-radius: 4px;
   padding: 5px;
+}
+
+.todo-selects {
+  display: flex;
+  gap: 10px;
+  
+  @media (max-width: 768px) {
+    flex-direction: column;
+    width: 100%;
+    margin-top: 5px;
+  }
+}
+
+.select-group {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  
+  label {
+    font-size: 0.8rem;
+  }
 }
 
 select {
