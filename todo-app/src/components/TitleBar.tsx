@@ -61,7 +61,11 @@ const TitleBar: React.FC = () => {
 
   return (
     <div className="title-bar">
-      <div className="window-controls left">
+      <div className="spacer"></div>
+      <div className="app-title">
+        <h1>Todo App</h1>
+      </div>
+      <div className="window-controls">
         <button className="window-control minimize" onClick={handleMinimize}>
           <span>_</span>
         </button>
@@ -72,10 +76,6 @@ const TitleBar: React.FC = () => {
           <span>x</span>
         </button>
       </div>
-      <div className="app-title">
-        <h1>Todo App</h1>
-      </div>
-      <div className="spacer"></div>
     </div>
   );
 };

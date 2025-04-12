@@ -6,14 +6,12 @@ import '../styles/App.scss';
 
 const App: React.FC = () => {
   return (
-    <div className="App-container">
+    <>
       <TitleBar />
-      <div className="App">
-        <ErrorBoundary>
-          <ToDoList />
-        </ErrorBoundary>
-      </div>
-    </div>
+      <ErrorBoundary>
+        <ToDoList />
+      </ErrorBoundary>
+    </>
   );
 };
 

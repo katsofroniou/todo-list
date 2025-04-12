@@ -4,23 +4,20 @@
 
 body {
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  background-color: $primary-light;
+  background-color: $background-color;
   margin: 0;
   padding: 0;
   height: 100vh;
   overflow: hidden;
-  @include flex-center;
+  min-width: 800px;
 }
 
 .App {
   width: 100%;
-  max-width: 1200px;
-  height: 95vh;
-  max-height: 900px;
+  height: 100vh;
   min-height: 600px;
   display: flex;
-  box-shadow: $shadow-lg;
-  border-radius: $border-radius-lg;
+  flex-direction: column;
   background-color: $background-color;
   border: 3px solid $primary-color;
   overflow: hidden;

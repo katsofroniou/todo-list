@@ -29,6 +29,8 @@ function createWindow() {
     icon: path.join(process.env.VITE_PUBLIC, "electron-vite.svg"),
     width: 1200,
     height: 800,
+    minWidth: 800,
+    minHeight: 600,
     frame: false,
     webPreferences: {
       preload: path.join(__dirname, "preload.mjs"),
@@ -74,9 +76,6 @@ function createWindow() {
     win.loadURL(process.env.VITE_DEV_SERVER_URL);
   } else {
     win.loadFile(path.join(process.env.APP_ROOT, "dist", "index.html"));
-  }
-  if (process.env.VITE_DEV_SERVER_URL) {
-    win.webContents.openDevTools();
   }
 }
 app.on("window-all-closed", () => {

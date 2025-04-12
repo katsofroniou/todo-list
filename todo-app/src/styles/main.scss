@@ -30,10 +30,8 @@ body {
 #root {
   width: 100%;
   height: 100%;
-  padding: 2.5%; /* Creates the gap around the edges */
   display: flex;
-  justify-content: center;
-  align-items: center;
+  flex-direction: column;
 }
 
 // Reset some browser defaults
