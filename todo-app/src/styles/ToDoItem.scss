@@ -1,5 +1,6 @@
 @use 'variables' as *;
 @use 'mixins' as *;
+@use 'sass:color';
 
 .todo-item {
   padding: $spacing-md;
@@ -9,6 +10,8 @@
   @include flex-between;
   flex-wrap: wrap;
   transition: $transition-normal;
+  background-color: white;
+  border-radius: $border-radius-sm;
   
   &:hover {
     background-color: $primary-light;
@@ -22,6 +25,7 @@
   input[type="text"] {
     @include input-base;
     width: 60%;
+    max-width: 300px;
   }
   
   input[type="date"] {
@@ -32,6 +36,7 @@
     display: flex;
     gap: $spacing-sm;
     margin: $spacing-sm 0;
+    flex-wrap: wrap;
     
     @include respond-to(md) {
       flex-direction: column;

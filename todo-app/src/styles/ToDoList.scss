@@ -4,25 +4,27 @@
 
 .todo-list {
   width: 100%;
-  max-width: 600px;
-  margin: 0 auto;
-  padding: $spacing-lg;
+  height: 100%;
+  padding: $spacing-xl;
   background-color: $background-color;
-  border-radius: $border-radius-lg;
-  box-shadow: $shadow-md;
-  border: 2px solid $primary-color;
   transition: $transition-normal;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
   
   h1 {
     text-align: center;
     color: $primary-dark;
     margin-bottom: $spacing-lg;
+    font-size: 2rem;
   }
   
   > button {
     @include button-primary;
     display: block;
     margin: 0 auto $spacing-lg;
+    font-size: 1.1rem;
+    padding: $spacing-sm $spacing-lg;
   }
   
   .tabs {
@@ -32,6 +34,7 @@
     button {
       @include button-pill;
       margin: 0 $spacing-xs;
+      font-size: 1rem;
       
       &.active {
         background-color: $primary-dark;
@@ -66,10 +69,32 @@
     }
   }
   
+  .todo-content {
+    flex: 1;
+    overflow-y: auto;
+    padding-right: $spacing-sm;
+    margin-top: $spacing-md;
+    min-height: 0;
+    
+    &::-webkit-scrollbar {
+      width: 6px;
+    }
+    
+    &::-webkit-scrollbar-track {
+      background: rgba($primary-color, 0.1);
+      border-radius: $border-radius-pill;
+    }
+    
+    &::-webkit-scrollbar-thumb {
+      background: rgba($primary-color, 0.5);
+      border-radius: $border-radius-pill;
+    }
+  }
+  
   .no-todos {
     text-align: center;
     padding: $spacing-lg;
-    color: color.adjust($text-color, $lightness: -40%);
+    color: color.adjust($text-color, $lightness: 40%);
     font-style: italic;
   }
 }
