@@ -18,8 +18,9 @@
   }
   
   &.completed {
-    text-decoration: line-through;
     color: $completed-color;
+    background-color: rgba($primary-light, 0.7);
+    border-left: 3px solid $completed-color;
   }
   
   input[type="text"] {
@@ -61,5 +62,54 @@
   
   button {
     @include button-primary;
+  }
+  
+  // Simplified view for matrix
+  &.simplified {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: $spacing-sm;
+    margin-bottom: $spacing-xs;
+    border-bottom: 1px solid rgba($primary-color, 0.3);
+    
+    .todo-text {
+      font-weight: 500;
+      flex: 1;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      margin-right: $spacing-sm;
+    }
+    
+    .todo-actions {
+      display: flex;
+      align-items: center;
+      gap: $spacing-xs;
+      flex-shrink: 0;
+      
+      .todo-date {
+        font-size: 0.8rem;
+        color: $primary-dark;
+        background: rgba($primary-color, 0.1);
+        padding: 2px 6px;
+        border-radius: $border-radius-pill;
+      }
+      
+      .complete-btn {
+        padding: 2px 8px;
+        font-size: 0.8rem;
+        min-width: auto;
+      }
+    }
+    
+    &:hover {
+      background-color: rgba($primary-light, 0.5);
+    }
+    
+    &.completed {
+      opacity: 0.8;
+      border-left: 3px solid $completed-color;
+    }
   }
 }

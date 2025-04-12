@@ -5,31 +5,31 @@
 .todo-list {
   width: 100%;
   height: 100%;
-  padding: $spacing-xl;
-  background-color: $background-color;
-  transition: $transition-normal;
   display: flex;
   flex-direction: column;
   overflow: hidden;
+  padding: $spacing-md;
   
   h1 {
     text-align: center;
     color: $primary-dark;
+    margin-top: 0;
     margin-bottom: $spacing-lg;
     font-size: 2rem;
+    flex-shrink: 0;
   }
   
   > button {
     @include button-primary;
     display: block;
     margin: 0 auto $spacing-lg;
-    font-size: 1.1rem;
-    padding: $spacing-sm $spacing-lg;
+    flex-shrink: 0;
   }
   
   .tabs {
     @include flex-center;
     margin-bottom: $spacing-lg;
+    flex-shrink: 0;
     
     button {
       @include button-pill;
@@ -48,10 +48,12 @@
     margin-top: $spacing-lg;
     border-bottom: 1px solid $primary-color;
     padding-bottom: $spacing-sm;
+    flex-shrink: 0;
   }
   
   .filters {
     margin-top: $spacing-lg;
+    flex-shrink: 0;
     
     .priority-filter {
       margin-top: $spacing-md;
@@ -70,11 +72,14 @@
   }
   
   .todo-content {
-    flex: 1;
+    flex: 1 1 auto;
     overflow-y: auto;
     padding-right: $spacing-sm;
     margin-top: $spacing-md;
     min-height: 0;
+    max-height: none;
+    width: 100%;
+    min-width: 0;
     
     &::-webkit-scrollbar {
       width: 6px;

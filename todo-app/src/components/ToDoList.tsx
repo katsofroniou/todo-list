@@ -30,7 +30,7 @@ const ToDoList: React.FC = () => {
         }));
         setTodos(parsedTodos);
       }
-      // If no stored todos, keep the default welcome todo
+      // If no stored todos, keep the default
     });
   }, []);
 

@@ -1,13 +1,8 @@
 import React from 'react';
+import { TodoItemProps } from '../types';
 import '../styles/ToDoItem.scss';
-import { Todo } from '../types';
 
-interface TodoItemProps {
-  todo: Todo;
-  onUpdate: (updatedTodo: Todo) => void;
-}
-
-const ToDoItem: React.FC<TodoItemProps> = ({ todo, onUpdate }) => {
+const ToDoItem: React.FC<TodoItemProps> = ({ todo, onUpdate, simplified = false }) => {
   const handleTextChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     onUpdate({ ...todo, text: e.target.value });
   };
@@ -37,34 +32,60 @@ const ToDoItem: React.FC<TodoItemProps> = ({ todo, onUpdate }) => {
       : '';
   };
 
+  // Format date for display
+  const formatDateForDisplay = (date?: Date): string => {
+    if (!date) return '';
+    
+    const options: Intl.DateTimeFormatOptions = { month: 'short', day: 'numeric' };
+    return date instanceof Date 
+      ? date.toLocaleDateString(undefined, options) 
+      : '';
+  };
+
   return (
-    <div className={`todo-item ${todo.completed ? 'completed' : ''}`}>
-      <input type="text" value={todo.text} onChange={handleTextChange} />
-      <input 
-        type="date" 
-        value={formatDateForInput(todo.dueDate)} 
-        onChange={handleDueDateChange} 
-      />
-      <div className="todo-selects">
-        <div className="select-group">
-          <label>Priority:</label>
-          <select value={todo.priority || 'not-important'} onChange={handlePriorityChange}>
-            <option value="important">Important</option>
-            <option value="not-important">Not Important</option>
-          </select>
-        </div>
-        <div className="select-group">
-          <label>Urgency:</label>
-          <select value={todo.urgency || 'low'} onChange={handleUrgencyChange}>
-            <option value="low">Low</option>
-            <option value="medium">Medium</option>
-            <option value="high">High</option>
-          </select>
-        </div>
-      </div>
-      <button onClick={toggleCompleted}>
-        {todo.completed ? 'Undo' : 'Complete'}
-      </button>
+    <div className={`todo-item ${todo.completed ? 'completed' : ''} ${simplified ? 'simplified' : ''}`}>
+      {simplified ? (
+        // simple view for matrix
+        <>
+          <span className="todo-text">{todo.text}</span>
+          <div className="todo-actions">
+            {todo.dueDate && <span className="todo-date">{formatDateForDisplay(todo.dueDate)}</span>}
+            <button onClick={toggleCompleted} className="complete-btn">
+              {todo.completed ? 'Undo' : 'Complete'}
+            </button>
+          </div>
+        </>
+      ) : (
+        // full view for list
+        <>
+          <input type="text" value={todo.text} onChange={handleTextChange} />
+          <input 
+            type="date" 
+            value={formatDateForInput(todo.dueDate)} 
+            onChange={handleDueDateChange} 
+          />
+          <div className="todo-selects">
+            <div className="select-group">
+              <label>Priority:</label>
+              <select value={todo.priority || 'not-important'} onChange={handlePriorityChange}>
+                <option value="important">Important</option>
+                <option value="not-important">Not Important</option>
+              </select>
+            </div>
+            <div className="select-group">
+              <label>Urgency:</label>
+              <select value={todo.urgency || 'low'} onChange={handleUrgencyChange}>
+                <option value="low">Low</option>
+                <option value="medium">Medium</option>
+                <option value="high">High</option>
+              </select>
+            </div>
+          </div>
+          <button onClick={toggleCompleted}>
+            {todo.completed ? 'Undo' : 'Complete'}
+          </button>
+        </>
+      )}
     </div>
   );
 };

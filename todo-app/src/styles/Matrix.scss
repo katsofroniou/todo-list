@@ -7,12 +7,16 @@
   width: 100%;
   height: 100%;
   overflow: hidden;
+  flex: 1;
+  min-height: 0;
   
   .matrix-row {
     display: flex;
     flex: 1;
-    margin-bottom: $spacing-md;
+    margin-bottom: $spacing-xs;
     min-height: 0;
+    gap: $spacing-xs;
+    height: 50%;
     
     @include respond-to(md) {
       flex-direction: column;
@@ -22,9 +26,8 @@
   
   .matrix-cell {
     flex: 1;
-    padding: $spacing-md;
+    padding: $spacing-sm;
     border-radius: $border-radius-md;
-    margin: 0 $spacing-sm;
     display: flex;
     flex-direction: column;
     box-shadow: $shadow-sm;
@@ -32,7 +35,7 @@
     min-height: 0;
     
     &:hover {
-      transform: translateY(-3px);
+      transform: translateY(-2px);
       box-shadow: $shadow-md;
     }
     
@@ -41,15 +44,18 @@
       color: $primary-dark;
       text-align: center;
       border-bottom: 2px dashed rgba($primary-color, 0.3);
-      padding-bottom: $spacing-sm;
-      font-size: 1.2rem;
+      padding-bottom: $spacing-xs;
+      font-size: 1.1rem;
+      flex-shrink: 0;
     }
     
     p {
       font-style: italic;
-      margin-bottom: $spacing-sm;
+      margin-bottom: $spacing-xs;
       color: $primary-color;
       text-align: center;
+      font-size: 0.9rem;
+      flex-shrink: 0;
     }
     
     $quadrant-colors: (
@@ -72,6 +78,9 @@
     overflow-y: auto;
     padding-right: $spacing-xs;
     min-height: 0;
+    max-height: none;
+    width: 100%;
+    min-width: 0;
     
     &::-webkit-scrollbar {
       width: 6px;
@@ -92,8 +101,9 @@
     color: color.adjust($text-color, $lightness: 40%);
     font-style: italic;
     text-align: center;
-    padding: $spacing-lg 0;
+    padding: $spacing-md 0;
     background-color: rgba(white, 0.5);
     border-radius: $border-radius-sm;
+    font-size: 0.9rem;
   }
 }

@@ -15,3 +15,9 @@ export interface StoredTodo {
   priority?: 'important' | 'not-important';
   urgency?: 'low' | 'medium' | 'high';
 }
+
+export interface TodoItemProps {
+  todo: Todo;
+  onUpdate: (updatedTodo: Todo) => void;
+  simplified?: boolean;
+}
