@@ -3,7 +3,8 @@ export interface Todo {
   text: string;
   completed: boolean;
   dueDate?: Date;
-  priority?: 'low' | 'medium' | 'high';
+  priority?: 'important' | 'not-important';
+  urgency?: 'low' | 'medium' | 'high';
 }
 
 export interface StoredTodo {
@@ -11,5 +12,6 @@ export interface StoredTodo {
   text: string;
   completed: boolean;
   dueDate?: string;
-  priority?: 'low' | 'medium' | 'high';
+  priority?: 'important' | 'not-important';
+  urgency?: 'low' | 'medium' | 'high';
 }

@@ -1,0 +1,63 @@
+.eisenhower-matrix {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    margin-top: 20px;
+    
+    .matrix-row {
+      display: flex;
+      flex-direction: row;
+      height: 300px;
+      
+      @media (max-width: 768px) {
+        flex-direction: column;
+        height: auto;
+      }
+    }
+    
+    .matrix-cell {
+      flex: 1;
+      padding: 15px;
+      border: 1px solid #ff69b4;
+      overflow-y: auto;
+      
+      h3 {
+        margin-top: 0;
+        color: #ff1493;
+      }
+      
+      p {
+        font-style: italic;
+        margin-bottom: 10px;
+        color: #ff69b4;
+      }
+    }
+    
+    .important-urgent {
+      background-color: #ffebee;
+    }
+    
+    .important-not-urgent {
+      background-color: #e8f5e9;
+    }
+    
+    .not-important-urgent {
+      background-color: #fff8e1;
+    }
+    
+    .not-important-not-urgent {
+      background-color: #f3e5f5;
+    }
+    
+    .matrix-todos {
+      max-height: 200px;
+      overflow-y: auto;
+    }
+    
+    .no-todos {
+      color: #999;
+      font-style: italic;
+      text-align: center;
+      padding: 20px 0;
+    }
+  }

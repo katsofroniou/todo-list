@@ -8,7 +8,8 @@ export interface StoredTodo {
   text: string;
   completed: boolean;
   dueDate?: string;
-  priority?: 'low' | 'medium' | 'high';
+  priority?: 'important' | 'not-important';
+  urgency?: 'low' | 'medium' | 'high';
 }
 
 const storePath = path.join(app.getPath('userData'), 'todos.json')
