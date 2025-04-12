@@ -1,0 +1,51 @@
+.todo-item {
+  padding: 10px;
+  border-bottom: 1px solid #ff69b4;
+  color: #ff1493;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  transition: background-color 0.3s;
+}
+
+.todo-item:hover {
+  background-color: #ffe6f2;
+}
+
+.todo-item.completed {
+  text-decoration: line-through;
+  color: #ff69b4;
+}
+
+input[type="text"] {
+  border: 1px solid #ff69b4;
+  border-radius: 4px;
+  padding: 5px;
+  width: 60%;
+}
+
+input[type="date"] {
+  border: 1px solid #ff69b4;
+  border-radius: 4px;
+  padding: 5px;
+}
+
+select {
+  border: 1px solid #ff69b4;
+  border-radius: 4px;
+  padding: 5px;
+}
+
+button {
+  background-color: #ff69b4;
+  color: white;
+  border: none;
+  padding: 5px 10px;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+button:hover {
+  background-color: #ff1493;
+}
