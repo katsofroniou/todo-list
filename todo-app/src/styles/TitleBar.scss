@@ -1,0 +1,86 @@
+@use 'variables' as *;
+@use 'mixins' as *;
+@use 'sass:color';
+
+.title-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 38px;
+  background-color: $primary-color;
+  color: white;
+  -webkit-app-region: drag;
+  user-select: none;
+  position: relative;
+  width: 100%;
+  
+  .window-controls {
+    display: flex;
+    align-items: center;
+    padding: 0 $spacing-sm;
+    -webkit-app-region: no-drag;
+    z-index: 100;
+    position: relative;
+    
+    &.left {
+      justify-content: flex-start;
+    }
+  }
+  
+  .spacer {
+    flex: 1;
+  }
+  
+  .window-control {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    margin: 0 2px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: transparent;
+    border: none;
+    color: white;
+    font-size: 16px;
+    cursor: pointer;
+    transition: $transition-fast;
+    -webkit-app-region: no-drag;
+    
+    &:hover {
+      background-color: rgba(255, 255, 255, 0.2);
+    }
+    
+    &.minimize:hover {
+      background-color: rgba(255, 255, 255, 0.2);
+    }
+    
+    &.maximize:hover {
+      background-color: rgba(255, 255, 255, 0.2);
+    }
+    
+    &.close:hover {
+      background-color: #e81123;
+    }
+    
+    span {
+      display: inline-block;
+      line-height: 1;
+      pointer-events: none;
+    }
+  }
+  
+  .app-title {
+    position: absolute;
+    left: 0;
+    right: 0;
+    text-align: center;
+    pointer-events: none;
+    
+    h1 {
+      margin: 0;
+      font-size: 16px;
+      font-weight: 500;
+    }
+  }
+} 

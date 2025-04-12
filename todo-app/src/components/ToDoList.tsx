@@ -55,7 +55,7 @@ const ToDoList: React.FC = () => {
     };
 
     window.addEventListener('beforeunload', handleBeforeUnload);
-    
+
     return () => {
       window.removeEventListener('beforeunload', handleBeforeUnload);
     };

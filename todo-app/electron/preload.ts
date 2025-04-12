@@ -1,24 +1,35 @@
-import { ipcRenderer, contextBridge } from 'electron'
+import { contextBridge, ipcRenderer, IpcRendererEvent } from 'electron'
 
-// --------- Expose some API to the Renderer process ---------
-contextBridge.exposeInMainWorld('ipcRenderer', {
-  on(...args: Parameters<typeof ipcRenderer.on>) {
-    const [channel, listener] = args
-    return ipcRenderer.on(channel, (event, ...args) => listener(event, ...args))
-  },
-  off(...args: Parameters<typeof ipcRenderer.off>) {
-    const [channel, ...omit] = args
-    return ipcRenderer.off(channel, ...omit)
-  },
-  send(...args: Parameters<typeof ipcRenderer.send>) {
-    const [channel, ...omit] = args
-    return ipcRenderer.send(channel, ...omit)
-  },
-  invoke(...args: Parameters<typeof ipcRenderer.invoke>) {
-    const [channel, ...omit] = args
-    return ipcRenderer.invoke(channel, ...omit)
-  },
+try {
+  // Expose IPC renderer
+  contextBridge.exposeInMainWorld('ipcRenderer', {
+    on: (channel: string, func: (...args: unknown[]) => void) => {
+      return ipcRenderer.on(channel, (_event: IpcRendererEvent, ...args: unknown[]) => func(...args));
+    },
+    send: (channel: string, ...args: unknown[]) => {
+      ipcRenderer.send(channel, ...args);
+    },
+    invoke: (channel: string, ...args: unknown[]) => {
+      return ipcRenderer.invoke(channel, ...args);
+    },
+    removeAllListeners: (channel: string) => {
+      ipcRenderer.removeAllListeners(channel);
+    }
+  });
 
-  // You can expose other APTs you need here.
-  // ...
-})
+  // Expose window control API
+  contextBridge.exposeInMainWorld('electronAPI', {
+    windowMinimize: () => {
+      ipcRenderer.send('window-minimize');
+    },
+    windowMaximize: () => {
+      ipcRenderer.send('window-maximize');
+    },
+    windowClose: () => {
+      ipcRenderer.send('window-close');
+    }
+  });
+
+} catch (error) {
+  console.error('Error in preload script:', error);
+}
