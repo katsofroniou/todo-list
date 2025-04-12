@@ -2,7 +2,7 @@ import React from 'react';
 import { TodoItemProps } from '../types';
 import '../styles/ToDoItem.scss';
 
-const ToDoItem: React.FC<TodoItemProps> = ({ todo, onUpdate, simplified = false }) => {
+const ToDoItem: React.FC<TodoItemProps> = ({ todo, onUpdate, onDelete, simplified = false }) => {
   const handleTextChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     onUpdate({ ...todo, text: e.target.value });
   };
@@ -53,6 +53,9 @@ const ToDoItem: React.FC<TodoItemProps> = ({ todo, onUpdate, simplified = false 
             <button onClick={toggleCompleted} className="complete-btn">
               {todo.completed ? 'Undo' : 'Complete'}
             </button>
+            <button onClick={() => onDelete(todo.id)} className="delete-btn">
+              Delete
+            </button>
           </div>
         </>
       ) : (
@@ -81,9 +84,14 @@ const ToDoItem: React.FC<TodoItemProps> = ({ todo, onUpdate, simplified = false 
               </select>
             </div>
           </div>
-          <button onClick={toggleCompleted}>
-            {todo.completed ? 'Undo' : 'Complete'}
-          </button>
+          <div className="todo-actions">
+            <button onClick={toggleCompleted}>
+              {todo.completed ? 'Undo' : 'Complete'}
+            </button>
+            <button onClick={() => onDelete(todo.id)} className="delete-btn">
+              Delete
+            </button>
+          </div>
         </>
       )}
     </div>

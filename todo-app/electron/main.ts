@@ -46,6 +46,7 @@ process.env.VITE_PUBLIC = VITE_DEV_SERVER_URL ? path.join(process.env.APP_ROOT, 
 let latestTodos: any[] = []
 
 let win: BrowserWindow | null
+let isQuitting = false;
 
 function createWindow() {
   win = new BrowserWindow({
@@ -111,8 +112,11 @@ function createWindow() {
   })
 
   // Save todos when window is about to close
-  win.on('close', () => {
-    debouncedStoreSave.flush();
+  win.on('close', (e) => {
+    if (!isQuitting) {
+      e.preventDefault();
+      app.quit();
+    }
   })
 
   // Load the app
@@ -163,7 +167,8 @@ ipcMain.handle('todos:update-latest', (_, todos) => {
 })
 
 app.on('before-quit', () => {
-  debouncedStoreSave.flush();
+  isQuitting = true;
+  app.exit();
 })
 
 ipcMain.on('update-todos', (_event, todos) => {

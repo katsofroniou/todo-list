@@ -323,6 +323,7 @@ const VITE_DEV_SERVER_URL = process.env["VITE_DEV_SERVER_URL"];
 const RENDERER_DIST = path.join(process.env.APP_ROOT, "dist");
 process.env.VITE_PUBLIC = VITE_DEV_SERVER_URL ? path.join(process.env.APP_ROOT, "public") : RENDERER_DIST;
 let win;
+let isQuitting = false;
 function createWindow() {
   win = new BrowserWindow({
     icon: path.join(process.env.VITE_PUBLIC, "electron-vite.svg"),
@@ -368,8 +369,11 @@ function createWindow() {
   win.webContents.on("did-finish-load", () => {
     win == null ? void 0 : win.webContents.send("main-process-message", (/* @__PURE__ */ new Date()).toLocaleString());
   });
-  win.on("close", () => {
-    debouncedStoreSave.flush();
+  win.on("close", (e) => {
+    if (!isQuitting) {
+      e.preventDefault();
+      app.quit();
+    }
   });
   if (process.env.VITE_DEV_SERVER_URL) {
     win.loadURL(process.env.VITE_DEV_SERVER_URL);
@@ -408,7 +412,8 @@ ipcMain.handle("todos:update-latest", (_, todos) => {
   return true;
 });
 app.on("before-quit", () => {
-  debouncedStoreSave.flush();
+  isQuitting = true;
+  app.exit();
 });
 ipcMain.on("update-todos", (_event, todos) => {
   if (win) {

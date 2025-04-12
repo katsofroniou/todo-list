@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import ToDoItem from './ToDoItem';
 import EisenhowerMatrix from './Matrix';
 import '../styles/ToDoList.scss';
-import { Todo } from '../types';
+import { Todo, ViewMode } from '../types';
 import { debounce } from 'lodash';
 
 // todo list component 
@@ -17,7 +17,7 @@ const ToDoList: React.FC = () => {
   }]);
   const [showCompleted, setShowCompleted] = useState(false);
   const [priorityFilter, setPriorityFilter] = useState<'all' | 'important' | 'not-important'>('all');
-  const [viewMode, setViewMode] = useState<'list' | 'matrix'>('list');
+  const [viewMode, setViewMode] = useState<ViewMode>('list');
 
   useEffect(() => {
     // Load initial todos when component mounts
@@ -91,6 +91,10 @@ const ToDoList: React.FC = () => {
     setTodos(todos.map(todo => (todo.id === updatedTodo.id ? updatedTodo : todo)));
   };
 
+  const deleteTodo = (id: number) => {
+    setTodos(todos.filter(todo => todo.id !== id));
+  };
+
   const sortedTodos = todos
     .filter(todo => {
       const completionMatch = todo.completed === showCompleted;
@@ -153,7 +157,13 @@ const ToDoList: React.FC = () => {
           <div className="todo-content">
             {sortedTodos.length > 0 ? (
               sortedTodos.map(todo => (
-                <ToDoItem key={todo.id} todo={todo} onUpdate={updateTodo} />
+                <ToDoItem 
+                  key={todo.id} 
+                  todo={todo} 
+                  onUpdate={updateTodo} 
+                  onDelete={deleteTodo}
+                  simplified={viewMode === ('matrix' as ViewMode)} 
+                />
               ))
             ) : (
               <div className="no-todos">No matching todos found</div>
@@ -161,7 +171,11 @@ const ToDoList: React.FC = () => {
           </div>
         </>
       ) : (
-        <EisenhowerMatrix todos={todos} onUpdate={updateTodo} />
+        <EisenhowerMatrix 
+          todos={todos} 
+          onUpdate={updateTodo} 
+          onDelete={deleteTodo}
+        />
       )}
     </div>
   );
