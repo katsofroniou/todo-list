@@ -1,9 +1,10 @@
 // @see - https://www.electron.build/configuration/configuration
 {
   "$schema": "https://raw.githubusercontent.com/electron-userland/electron-builder/master/packages/app-builder-lib/scheme.json",
-  "appId": "YourAppID",
+  "appId": "uk.co.strawberrykat.todo",
   "asar": true,
-  "productName": "YourAppName",
+  "productName": "To Do",
+  "icon": "public/strawberry.png",
   "directories": {
     "output": "release/${version}"
   },

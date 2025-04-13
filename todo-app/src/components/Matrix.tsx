@@ -1,14 +1,9 @@
 import React from 'react';
-import { Todo } from '../types';
+import { EisenhowerMatrixProps } from '../types';
 import ToDoItem from './ToDoItem';
 import '../styles/Matrix.scss';
 
-interface EisenhowerMatrixProps {
-  todos: Todo[];
-  onUpdate: (updatedTodo: Todo) => void;
-}
-
-const EisenhowerMatrix: React.FC<EisenhowerMatrixProps> = ({ todos, onUpdate }) => {
+const EisenhowerMatrix: React.FC<EisenhowerMatrixProps> = ({ todos, onUpdate, onDelete }) => {
   // quadrant filtering
   const importantUrgent = todos.filter(
     todo => (todo.priority === 'important') && (todo.urgency === 'high') && !todo.completed
@@ -35,7 +30,7 @@ const EisenhowerMatrix: React.FC<EisenhowerMatrixProps> = ({ todos, onUpdate }) 
           <div className="matrix-todos">
             {importantUrgent.length > 0 ? (
               importantUrgent.map(todo => (
-                <ToDoItem key={todo.id} todo={todo} onUpdate={onUpdate} simplified={true} />
+                <ToDoItem key={todo.id} todo={todo} onUpdate={onUpdate} onDelete={onDelete} simplified={true} />
               ))
             ) : (
               <div className="no-todos">No tasks here</div>
@@ -48,7 +43,7 @@ const EisenhowerMatrix: React.FC<EisenhowerMatrixProps> = ({ todos, onUpdate }) 
           <div className="matrix-todos">
             {importantNotUrgent.length > 0 ? (
               importantNotUrgent.map(todo => (
-                <ToDoItem key={todo.id} todo={todo} onUpdate={onUpdate} simplified={true} />
+                <ToDoItem key={todo.id} todo={todo} onUpdate={onUpdate} onDelete={onDelete} simplified={true} />
               ))
             ) : (
               <div className="no-todos">No tasks here</div>
@@ -64,7 +59,7 @@ const EisenhowerMatrix: React.FC<EisenhowerMatrixProps> = ({ todos, onUpdate }) 
           <div className="matrix-todos">
             {notImportantUrgent.length > 0 ? (
               notImportantUrgent.map(todo => (
-                <ToDoItem key={todo.id} todo={todo} onUpdate={onUpdate} simplified={true} />
+                <ToDoItem key={todo.id} todo={todo} onUpdate={onUpdate} onDelete={onDelete} simplified={true} />
               ))
             ) : (
               <div className="no-todos">No tasks here</div>
@@ -77,7 +72,7 @@ const EisenhowerMatrix: React.FC<EisenhowerMatrixProps> = ({ todos, onUpdate }) 
           <div className="matrix-todos">
             {notImportantNotUrgent.length > 0 ? (
               notImportantNotUrgent.map(todo => (
-                <ToDoItem key={todo.id} todo={todo} onUpdate={onUpdate} simplified={true} />
+                <ToDoItem key={todo.id} todo={todo} onUpdate={onUpdate} onDelete={onDelete} simplified={true} />
               ))
             ) : (
               <div className="no-todos">No tasks here</div>

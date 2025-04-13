@@ -16,8 +16,17 @@ export interface StoredTodo {
   urgency?: 'low' | 'medium' | 'high';
 }
 
+export type ViewMode = 'list' | 'matrix';
+
 export interface TodoItemProps {
   todo: Todo;
   onUpdate: (updatedTodo: Todo) => void;
-  simplified?: boolean;
+  onDelete: (id: number) => void;
+  simplified: boolean;
+}
+
+export interface EisenhowerMatrixProps {
+  todos: Todo[];
+  onUpdate: (updatedTodo: Todo) => void;
+  onDelete: (id: number) => void;
 }

@@ -1,7 +1,9 @@
 {
   "name": "todo-app",
   "private": true,
-  "version": "0.0.0",
+  "version": "1.0.0",
+  "description": "An intuitive todo app with Eisenhower Matrix support for better task management",
+  "author": "Katerina Sofroniou",
   "type": "module",
   "scripts": {
     "dev": "vite",
@@ -12,12 +14,14 @@
   "dependencies": {
     "electro": "^2.1.1",
     "esbuild": "^0.25.2",
+    "lodash": "^4.17.21",
     "react": "^19.1.0",
     "react-dom": "^19.1.0",
     "sass": "^1.86.3",
     "vite-tsconfig-paths": "^5.1.4"
   },
   "devDependencies": {
+    "@types/lodash": "^4.17.16",
     "@types/react": "^19.1.1",
     "@types/react-dom": "^19.1.2",
     "@typescript-eslint/eslint-plugin": "^8.29.1",

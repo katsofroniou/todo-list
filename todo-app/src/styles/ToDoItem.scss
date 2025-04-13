@@ -22,6 +22,21 @@
     background-color: rgba($primary-light, 0.7);
     border-left: 3px solid $completed-color;
   }
+
+  .delete-btn {
+    background-color: #800080;
+    color: white;
+    margin-left: 8px;
+    
+    &:hover {
+      background-color: #4B0082;
+    }
+  }
+  
+  .todo-actions {
+    display: flex;
+    gap: 8px;
+  }
   
   input[type="text"] {
     @include input-base;
