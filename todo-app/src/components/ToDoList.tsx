@@ -24,7 +24,6 @@ const ToDoList: React.FC = () => {
     const loadInitialTodos = async () => {
       try {
         const initialTodos = await window.ipcRenderer.invoke('todos:get');
-        console.log('Received initial todos:', initialTodos);
         if (Array.isArray(initialTodos) && initialTodos.length > 0) {
           // Convert ISO date strings back to Date objects
           const processedTodos = initialTodos.map(todo => ({
@@ -42,7 +41,6 @@ const ToDoList: React.FC = () => {
 
     // Listen for todos-updated events
     const handleTodosUpdated = (_event: any, updatedTodos: any[]) => {
-      console.log('Received todos-updated event:', updatedTodos);
       if (Array.isArray(updatedTodos)) {
         const processedTodos = updatedTodos.map(todo => ({
           ...todo,

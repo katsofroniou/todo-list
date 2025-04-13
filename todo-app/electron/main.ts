@@ -1,5 +1,4 @@
 import { app, BrowserWindow, ipcMain } from 'electron'
-import { createRequire } from 'node:module'
 import { fileURLToPath } from 'node:url'
 import path from 'node:path'
 import fs from 'node:fs'
@@ -10,7 +9,6 @@ const store = {
   get() {
     try {
       const todos = JSON.parse(fs.readFileSync(storePath, 'utf8'))
-      console.log('Loaded todos:', todos)
       return todos
     } catch (error) {
       console.log('Error loading todos:', error)
@@ -18,12 +16,13 @@ const store = {
     }
   },
   set(todos: any[]) {
-    console.log('Saving todos:', todos)
     fs.writeFileSync(storePath, JSON.stringify(todos))
   }
 }
 
-const require = createRequire(import.meta.url)
+let win: BrowserWindow | null
+let isQuitting = false;
+
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
 
 // The built directory structure
@@ -42,15 +41,9 @@ export const VITE_DEV_SERVER_URL = process.env['VITE_DEV_SERVER_URL']
 const RENDERER_DIST = path.join(process.env.APP_ROOT, 'dist')
 process.env.VITE_PUBLIC = VITE_DEV_SERVER_URL ? path.join(process.env.APP_ROOT, 'public') : RENDERER_DIST
 
-// Add a variable to store the latest todos
-let latestTodos: any[] = []
-
-let win: BrowserWindow | null
-let isQuitting = false;
-
 function createWindow() {
   win = new BrowserWindow({
-    icon: path.join(process.env.VITE_PUBLIC, 'electron-vite.svg'),
+    icon: path.join(process.env.APP_ROOT, 'public', 'strawberry.png'),
     width: 1200,
     height: 800,
     minWidth: 800,
@@ -67,8 +60,6 @@ function createWindow() {
 
   // Load initial todos from store
   const initialTodos = store.get()
-  latestTodos = initialTodos
-  console.log('Initial todos loaded:', initialTodos)
 
   // Add CSP headers with development-friendly settings
   win.webContents.session.webRequest.onHeadersReceived((details, callback) => {
@@ -128,7 +119,6 @@ function createWindow() {
 
   // Send initial todos to renderer once window is ready
   win.webContents.on('did-finish-load', () => {
-    console.log('Window finished loading, sending initial todos:', initialTodos)
     win?.webContents.send('todos-updated', initialTodos)
   })
 }
@@ -161,8 +151,7 @@ ipcMain.handle('todos:get', () => {
   return store.get()
 })
 
-ipcMain.handle('todos:update-latest', (_, todos) => {
-  latestTodos = todos
+ipcMain.handle('todos:update-latest', (_, _todos) => {
   return true
 })
 
@@ -172,7 +161,6 @@ app.on('before-quit', () => {
 })
 
 ipcMain.on('update-todos', (_event, todos) => {
-  latestTodos = todos;
   if (win) {
     win.webContents.send('todos-updated', todos);
   }
