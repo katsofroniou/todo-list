@@ -5,6 +5,10 @@
   "description": "An intuitive to-do app with Eisenhower Matrix support for better task management",
   "author": "Katerina Sofroniou",
   "type": "module",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/katsofroniou/todo-list.git"
+  },
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build && electron-builder",
