@@ -1,7 +1,7 @@
 {
   "name": "to-do-app",
   "private": true,
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "An intuitive to-do app with Eisenhower Matrix support for better task management",
   "author": "Katerina Sofroniou",
   "type": "module",
