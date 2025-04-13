@@ -7,9 +7,16 @@ yarn-error.log*
 pnpm-debug.log*
 lerna-debug.log*
 
+# Dependencies
 node_modules
+.pnp
+.pnp.js
+
+# Build outputs
 dist
+dist-electron
 dist-ssr
+release
 *.local
 
 # Editor directories and files
@@ -22,3 +29,21 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# Environment files
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# Electron specific
+out/
+
+# Testing
+coverage
+
+# Temporary files
+.temp
+.tmp
+.cache
