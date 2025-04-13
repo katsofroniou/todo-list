@@ -109,8 +109,8 @@ const ToDoList: React.FC = () => {
 
   return (
     <div className="todo-list" role="main">
-      <h1>Todo List</h1>
-      <button type="button" onClick={() => addTodo('New Task')}>Add Todo</button>
+      <h1>To-Do List</h1>
+      <button type="button" onClick={() => addTodo('New Task')}>Add Task</button>
       
       <div className="view-tabs">
         <button 
@@ -164,7 +164,7 @@ const ToDoList: React.FC = () => {
                 />
               ))
             ) : (
-              <div className="no-todos">No matching todos found</div>
+              <div className="no-todos">No matching to-dos found</div>
             )}
           </div>
         </>

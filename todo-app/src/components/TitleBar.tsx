@@ -63,7 +63,7 @@ const TitleBar: React.FC = () => {
     <div className="title-bar">
       <div className="spacer"></div>
       <div className="app-title">
-        <h1>Todo App</h1>
+        <h1>To-Do App</h1>
       </div>
       <div className="window-controls">
         <button className="window-control minimize" onClick={handleMinimize}>
