@@ -4,6 +4,9 @@ on:
     tags:
       - 'v[0-9]+.[0-9]+.[0-9]+'
 
+permissions:
+  contents: write
+
 jobs:
   release:
     runs-on: ${{ matrix.os }}
@@ -11,10 +14,19 @@ jobs:
     strategy:
       matrix:
         os: [macos-latest, ubuntu-latest, windows-latest]
+        include:
+          - os: macos-latest
+            artifact_glob: "todo-app/release/**/*-Installer.dmg"
+          - os: ubuntu-latest
+            artifact_glob: "todo-app/release/**/*.AppImage"
+          - os: windows-latest
+            artifact_glob: "todo-app/release/**/*-Setup.exe"
     
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
         
       - name: Setup Node.js
         uses: actions/setup-node@v4
@@ -31,14 +43,10 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           
-      - name: Create Release
+      - name: Upload Release Asset
         uses: softprops/action-gh-release@v1
         with:
-          files: |
-            todo-app/release/**/*.exe
-            todo-app/release/**/*.dmg
-            todo-app/release/**/*.AppImage
+          files: ${{ matrix.artifact_glob }}
           draft: false
           prerelease: false
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          token: ${{ secrets.GITHUB_TOKEN }}
