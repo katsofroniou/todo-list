@@ -13,8 +13,10 @@ const ToDoList: React.FC = () => {
     completed: false,
     priority: 'important',
     urgency: 'high',
-    dueDate: new Date(Date.now() + 86400000) // Tomorrow
+    dueDate: new Date(Date.now() + 86400000), 
+    subtasks: []
   }]);
+
   const [showCompleted, setShowCompleted] = useState(false);
   const [priorityFilter, setPriorityFilter] = useState<'all' | 'important' | 'not-important'>('all');
   const [viewMode, setViewMode] = useState<ViewMode>('list');

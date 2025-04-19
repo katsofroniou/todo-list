@@ -1,8 +1,11 @@
-import React from 'react';
-import { TodoItemProps } from '../types';
+import React, { useState } from 'react';
+import { Todo, TodoItemProps } from '../types';
 import '../styles/ToDoItem.scss';
 
 const ToDoItem: React.FC<TodoItemProps> = ({ todo, onUpdate, onDelete, simplified = false }) => {
+  const [showSubtasks, setShowSubtasks] = useState(false);
+  const [newSubtaskText, setNewSubtaskText] = useState('');
+
   const handleTextChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     onUpdate({ ...todo, text: e.target.value });
   };
@@ -40,6 +43,40 @@ const ToDoItem: React.FC<TodoItemProps> = ({ todo, onUpdate, onDelete, simplifie
     return date instanceof Date 
       ? date.toLocaleDateString(undefined, options) 
       : '';
+  };
+
+  const addSubtask = () => {
+    if (!newSubtaskText.trim()) return;
+    
+    const newSubtask = {
+      id: Date.now(),
+      text: newSubtaskText,
+      completed: false,
+      priority: todo.priority,
+      urgency: todo.urgency
+    };
+    
+    const updatedTodo = {
+      ...todo,
+      subtasks: [...(todo.subtasks || []), newSubtask]
+    };
+    
+    onUpdate(updatedTodo);
+    setNewSubtaskText('');
+  };
+
+  const updateSubtask = (updatedSubtask: Todo) => {
+    const updatedSubtasks = (todo.subtasks || []).map(subtask => 
+      subtask.id === updatedSubtask.id ? updatedSubtask : subtask
+    );
+    onUpdate({ ...todo, subtasks: updatedSubtasks });
+  };
+
+  const deleteSubtask = (subtaskId: number) => {
+    const updatedSubtasks = (todo.subtasks || []).filter(subtask => 
+      subtask.id !== subtaskId
+    );
+    onUpdate({ ...todo, subtasks: updatedSubtasks });
   };
 
   return (
@@ -93,6 +130,41 @@ const ToDoItem: React.FC<TodoItemProps> = ({ todo, onUpdate, onDelete, simplifie
             </button>
           </div>
         </>
+      )}
+
+      {!simplified && (
+        <div className="subtasks-section">
+          <button 
+            className="toggle-subtasks"
+            onClick={() => setShowSubtasks(!showSubtasks)}
+          >
+            {showSubtasks ? '▼' : '▶'} Subtasks ({todo.subtasks?.length || 0})
+          </button>
+          
+          {showSubtasks && (
+            <div className="subtasks-container">
+              <div className="add-subtask">
+                <input
+                  type="text"
+                  value={newSubtaskText}
+                  onChange={(e) => setNewSubtaskText(e.target.value)}
+                  placeholder="New subtask..."
+                />
+                <button onClick={addSubtask}>Add</button>
+              </div>
+              
+              {todo.subtasks?.map(subtask => (
+                <ToDoItem
+                  key={subtask.id}
+                  todo={subtask}
+                  onUpdate={updateSubtask}
+                  onDelete={deleteSubtask}
+                  simplified={true}
+                />
+              ))}
+            </div>
+          )}
+        </div>
       )}
     </div>
   );

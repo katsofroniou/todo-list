@@ -3,6 +3,7 @@
 @use 'sass:color';
 
 .todo-item {
+  $self: &;
   padding: $spacing-md;
   margin-bottom: $spacing-sm;
   border-bottom: 1px solid $primary-color;
@@ -125,6 +126,56 @@
     &.completed {
       opacity: 0.8;
       border-left: 3px solid $completed-color;
+    }
+  }
+
+  .subtasks-section {
+    width: 100%;
+    margin-top: $spacing-md;
+    
+    .toggle-subtasks {
+      background: none;
+      border: none;
+      color: $primary-color;
+      cursor: pointer;
+      padding: $spacing-xs;
+      font-weight: 500;
+      
+      &:hover {
+        color: color.adjust($primary-color, $lightness: -20%);
+      }
+    }
+    
+    .subtasks-container {
+      margin-left: $spacing-lg;
+      padding-left: $spacing-md;
+      border-left: 2px solid $primary-light;
+      
+      .add-subtask {
+        display: flex;
+        gap: $spacing-sm;
+        margin: $spacing-sm 0;
+        
+        input {
+          @include input-base;
+          flex: 1;
+        }
+        
+        button {
+          @include button-primary;
+          padding: $spacing-xs $spacing-sm;
+        }
+      }
+      
+      #{$self} {
+        margin-bottom: $spacing-xs;
+        border-bottom: 1px solid color.adjust($primary-light, $lightness: -5%);
+        
+        &:last-child {
+          margin-bottom: 0;
+          border-bottom: none;
+        }
+      }
     }
   }
 }

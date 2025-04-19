@@ -5,6 +5,7 @@ export interface Todo {
   dueDate?: Date;
   priority?: 'important' | 'not-important';
   urgency?: 'low' | 'medium' | 'high';
+  subtasks?: Todo[];
 }
 
 export interface StoredTodo {
